@@ -5,8 +5,16 @@
 #define dx 15
 #define dy 25
 
+GLfloat bgr = 0.0, bgg = 0.0, bgb = 0.0;
+GLfloat trgb[3] = {1.0, 1.0, 1.0};
+GLfloat pcrgb1[3] = {0.7, 0.2, 0.0};
+GLfloat pcrgb2[3] = {0.7, 0.2, 0.2};
+GLfloat pcrgb3[3] = {0.7, 0.0, 0.2};
+GLfloat pcrgb4[3] = {0.7, 0.3, 0.2};
+bool titleFlag = true, mainMenuFlag = true, firstRun = true, pcColor = false;
+
 void *currentfont;
-int window;
+int window, colorNum = 0;
 
 GLfloat x[25];
 GLfloat y[20];
@@ -32,9 +40,8 @@ void drawstring(float x, float y, float z, char *string)
 
 void text(void) // to draw the text in menu screen
 {
-
 	setFont(GLUT_BITMAP_HELVETICA_18);
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(95.0, 455.0, 1.0, "*  *  *  *  *  *  *  *  *  S E L E C T I V E     R E P E A T      A R Q  *  *  *  *  *  *  *  *  *");
 
 	glColor3f(1.0, 1.0, 1.0);
@@ -53,13 +60,19 @@ void text(void) // to draw the text in menu screen
 	drawstring(215.0, 185.0, 1.0, " TIME  OUT");
 
 	glColor3f(1.0, 1.0, 1.0);
-	drawstring(225.0, 130.0, 1.0, "  EXIT");
+	drawstring(186.0, 130.0, 1.0, "BG COLOR");
+
+	glColor3f(1.0, 1.0, 1.0);
+	drawstring(251.0, 130.0, 1.0, "PC COLOR");
+
+	glColor3f(1.0, 1.0, 1.0);
+	drawstring(225.0, 80.0, 1.0, "  EXIT");
 	glFlush();
 }
 
 void draw() // TO DRAW POLYGON FOR DISPLAY MENUS
 {
-
+	glClearColor(bgr, bgg, bgb, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glBegin(GL_POLYGON); // send window
 	glColor3f(0.7f, 0.2f, 0.2f);
@@ -106,19 +119,39 @@ void draw() // TO DRAW POLYGON FOR DISPLAY MENUS
 	glEnd();
 	glFlush();
 
-	glBegin(GL_POLYGON); // exit
+	glBegin(GL_POLYGON); // bg color
 	glColor3f(0.7f, 0.2f, 0.2f);
-	glVertex2i(305, 150);
+	glVertex2i(242, 150);
 	glVertex2i(180, 150);
 	glVertex2i(180, 120);
+	glVertex2i(242, 120);
+	glEnd();
+	glFlush();
+
+	glBegin(GL_POLYGON); // pc color
+	glColor3f(0.7f, 0.2f, 0.2f);
+	glVertex2i(305, 150);
+	glVertex2i(244, 150);
+	glVertex2i(244, 120);
 	glVertex2i(305, 120);
 	glEnd();
 	glFlush();
+
+	glBegin(GL_POLYGON); // exit
+	glColor3f(0.7f, 0.2f, 0.2f);
+	glVertex2i(305, 100);
+	glVertex2i(180, 100);
+	glVertex2i(180, 70);
+	glVertex2i(305, 70);
+	glEnd();
+	glFlush();
+
+	text();
 }
 
 void myInit()
 {
-	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClearColor(bgr, bgg, bgb, 0.0);
 	glColor3f(0.0f, 0.0f, 0.0f);
 	glPointSize(5.0);
 	gluOrtho2D(0.0, 500.0, 0.0, 500.0);
@@ -137,7 +170,7 @@ void computer() // to draw the sender and receiver computers
 	glColor3f(1.0f, 1.0f, 1.0f);
 	drawstring(345.0, 420.0, 1.0, "RECEIVER");
 
-	glColor3f(0.7, 0.2, 0.0); //monitor
+	glColor3fv(pcrgb1); //monitor
 	glBegin(GL_LINE_LOOP);
 	glVertex2f(85, 380);
 	glVertex2f(85, 440);
@@ -146,7 +179,7 @@ void computer() // to draw the sender and receiver computers
 	glEnd();
 	glFlush();
 
-	glColor3f(0.7, 0.2, 0.0); //monitor
+	glColor3fv(pcrgb1); //monitor
 	glBegin(GL_LINE_LOOP);
 	glVertex2f(87, 382);
 	glVertex2f(87, 438);
@@ -155,7 +188,7 @@ void computer() // to draw the sender and receiver computers
 	glEnd();
 	glFlush();
 
-	glColor3f(0.7, 0.0, 0.2); //vertical stand
+	glColor3fv(pcrgb3); //vertical stand
 	glBegin(GL_LINES);
 	glVertex2f(105, 380);
 	glVertex2f(105, 375);
@@ -164,7 +197,7 @@ void computer() // to draw the sender and receiver computers
 	glEnd();
 	glFlush();
 
-	glColor3f(0.7, 0.3, 0.2); //horizontal stand
+	glColor3fv(pcrgb4); //horizontal stand
 	glBegin(GL_QUADS);
 	glVertex2f(98, 370);
 	glVertex2f(98, 375);
@@ -173,7 +206,7 @@ void computer() // to draw the sender and receiver computers
 	glEnd();
 	glFlush();
 
-	glColor3f(0.7, 0.2, 0.2); //CPU
+	glColor3fv(pcrgb2); //CPU
 	glBegin(GL_LINE_LOOP);
 	glVertex2f(80, 350);
 	glVertex2f(80, 370);
@@ -182,7 +215,7 @@ void computer() // to draw the sender and receiver computers
 	glEnd();
 	glFlush();
 
-	glColor3f(0.7, 0.8, 0.2); //CPU
+	glColor3fv(pcrgb2); //CPU
 	glBegin(GL_QUADS);
 	glVertex2f(95, 360);
 	glVertex2f(95, 365);
@@ -200,7 +233,7 @@ void computer() // to draw the sender and receiver computers
 	glEnd();
 	glFlush();
 
-	glColor3f(0.7, 0.2, 0.2); //keyboard outline
+	glColor3fv(pcrgb2); //keyboard outline
 	glBegin(GL_LINE_LOOP);
 	glVertex2f(77, 325);
 	glVertex2f(87, 350);
@@ -209,7 +242,7 @@ void computer() // to draw the sender and receiver computers
 	glEnd();
 	glFlush();
 
-	glColor3f(0.7, 0.2, 0.2); //keyboard outline
+	glColor3fv(pcrgb2); //keyboard outline
 	glBegin(GL_POLYGON);
 	glVertex2f(77, 325);
 	glVertex2f(158, 325);
@@ -218,7 +251,7 @@ void computer() // to draw the sender and receiver computers
 	glEnd();
 	glFlush();
 
-	glColor3f(0.7, 0.0, 0.2); //horizontal lines of keyboard
+	glColor3fv(pcrgb3); //horizontal lines of keyboard
 	glBegin(GL_LINES);
 	glVertex2f(85, 345);
 	glVertex2f(150, 345);
@@ -233,7 +266,7 @@ void computer() // to draw the sender and receiver computers
 	glEnd();
 	glFlush();
 
-	glColor3f(0.7, 0.0, 0.2); //vertical lines of keyboard
+	glColor3fv(pcrgb3); //vertical lines of keyboard
 	glBegin(GL_LINES);
 	glVertex2f(89, 322);
 	glVertex2f(97, 350);
@@ -250,7 +283,7 @@ void computer() // to draw the sender and receiver computers
 
 	// COMPUTER AT RECEIVER
 
-	glColor3f(0.7, 0.2, 0.0); //monitior
+	glColor3fv(pcrgb1); //monitior
 	glBegin(GL_LINE_LOOP);
 	glVertex2f(335, 380);
 	glVertex2f(335, 440);
@@ -259,7 +292,7 @@ void computer() // to draw the sender and receiver computers
 	glEnd();
 	glFlush();
 
-	glColor3f(0.7, 0.2, 0.0); //monitior
+	glColor3fv(pcrgb1); //monitior
 	glBegin(GL_LINE_LOOP);
 	glVertex2f(337, 382);
 	glVertex2f(337, 438);
@@ -268,7 +301,7 @@ void computer() // to draw the sender and receiver computers
 	glEnd();
 	glFlush();
 
-	glColor3f(0.7, 0.0, 0.2); //ver
+	glColor3fv(pcrgb3); //ver
 	glBegin(GL_LINES);
 	glVertex2f(355, 380);
 	glVertex2f(355, 375);
@@ -277,7 +310,7 @@ void computer() // to draw the sender and receiver computers
 	glEnd();
 	glFlush();
 
-	glColor3f(0.7, 0.3, 0.2); //hor
+	glColor3fv(pcrgb4); //hor
 	glBegin(GL_QUADS);
 	glVertex2f(348, 370);
 	glVertex2f(348, 375);
@@ -286,7 +319,7 @@ void computer() // to draw the sender and receiver computers
 	glEnd();
 	glFlush();
 
-	glColor3f(0.7, 0.2, 0.2); //CPU
+	glColor3fv(pcrgb2); //CPU
 	glBegin(GL_LINE_LOOP);
 	glVertex2f(330, 350);
 	glVertex2f(330, 370);
@@ -313,7 +346,7 @@ void computer() // to draw the sender and receiver computers
 	glEnd();
 	glFlush();
 
-	glColor3f(0.7, 0.2, 0.2); //keyboard
+	glColor3fv(pcrgb2); //keyboard
 	glBegin(GL_LINE_LOOP);
 	glVertex2f(327, 322);
 	glVertex2f(337, 350);
@@ -322,7 +355,7 @@ void computer() // to draw the sender and receiver computers
 	glEnd();
 	glFlush();
 
-	glColor3f(0.7, 0.2, 0.2); //keyboard
+	glColor3fv(pcrgb2); //keyboard
 	glBegin(GL_POLYGON);
 	glVertex2f(327, 325);
 	glVertex2f(408, 325);
@@ -331,7 +364,7 @@ void computer() // to draw the sender and receiver computers
 	glEnd();
 	glFlush();
 
-	glColor3f(0.7, 0.0, 0.2); //horizontal lines of keyboard
+	glColor3fv(pcrgb3); //horizontal lines of keyboard
 	glBegin(GL_LINES);
 	glVertex2f(335, 345);
 	glVertex2f(400, 345);
@@ -346,7 +379,7 @@ void computer() // to draw the sender and receiver computers
 	glEnd();
 	glFlush();
 
-	glColor3f(0.7, 0.0, 0.2); //vertical lines of keyboard
+	glColor3fv(pcrgb3); //vertical lines of keyboard
 	glBegin(GL_LINES);
 	glVertex2f(339, 322);
 	glVertex2f(347, 350);
@@ -378,7 +411,7 @@ void computer() // to draw the sender and receiver computers
 	glFlush();
 
 	setFont(GLUT_BITMAP_HELVETICA_12);
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(432.0, 425.5, 1.0, "DATA FRAMES");
 	glFlush();
 
@@ -391,7 +424,7 @@ void computer() // to draw the sender and receiver computers
 	glEnd();
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(432.0, 410.5, 1.0, "ACK ");
 	glFlush();
 
@@ -404,7 +437,7 @@ void computer() // to draw the sender and receiver computers
 	glEnd();
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(432.0, 395.5, 1.0, "NAK");
 	glFlush();
 }
@@ -523,16 +556,16 @@ void title() // to draw the starting screen
 
 	setFont(GLUT_BITMAP_HELVETICA_18);
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3f(1.0, 0.0, 0.0);
 	drawstring(180.0, 435.0, 1.0, "***** NETWORK PACKET ARQ *****");
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3f(1.0, 0.0, 0.0);
 	drawstring(220.0, 365.0, 1.0, "SUBMITTED   BY");
 
-	glColor3f(0.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(220.0, 340.0, 1.0, "Name: Yashas Hr");
 
-	glColor3f(0.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(220.0, 320.0, 1.0, "USN: 1KS15CS121");
 
 	glFlush();
@@ -1387,15 +1420,15 @@ void move6() // RESENDING OF FRAME 1(in packet crashing)
 		glFlush();
 	}
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(70, 268.0, 0.0, "1");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(85, 268.0, 0.0, "2");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(100, 268.0, 0.0, "3");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(320, 268.0, 0.0, "1");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(365, 268.0, 0.0, "4");
 }
 
@@ -1495,7 +1528,7 @@ void move7() // MOVEMENT OF ACK 4 (in packet crashing)
 		glEnd();
 		glFlush();
 	}
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(365, 268.0, 0.0, "4");
 }
 
@@ -1754,10 +1787,10 @@ void move9() // MOVEMENT OF ACK 1 (in safe sending)
 	drawstring(160.0, 365.0, 1.0, "   ACK1 received");
 
 	setFont(GLUT_BITMAP_HELVETICA_12);
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(55, 268.0, 0.0, "0");
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(320, 268.0, 0.0, "1");
 
 	//	delay();
@@ -2103,7 +2136,7 @@ void move11() // MOVEMENT OF ACK 4 (in packet crashing)
 		glEnd();
 		glFlush();
 	}
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(365, 268.0, 0.0, "4");
 
 	glColor3f(0.0f, 0.0f, 0.0f);
@@ -2577,35 +2610,36 @@ void move14() // RESENDING OF FRAME 2 (in packet crashing)
 }
 
 void draw1(void) // DRAWING OF SEND WINDOW WITH ITS LABELS
-{
+{	
+	
 	// SENDER WINDOW
 	glClear(GL_COLOR_BUFFER_BIT);
 	glColor3f(0.0, 0.0, 1.0);
 	slide(25, 2, 50, 250); // Initial set of frames in BLUE color
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	setFont(GLUT_BITMAP_HELVETICA_18);
 	drawstring(210.0, 405.0, 1.0, "S E N D   W I N D O W");
 
 	setFont(GLUT_BITMAP_HELVETICA_12);
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(50, 220.0, 0.0, "FRAMES  ALREADY");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(50, 210.0, 0.0, "ACKNOWLEDGED");
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(125, 220.0, 0.0, "FRAMES SENT");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(125, 210.0, 0.0, "BUT NOT");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(125, 200.0, 0.0, "ACKNOWLEDGED");
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(195, 220.0, 0.0, "FRAMES THAT");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(195, 210.0, 0.0, "CAN BE SENT");
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(290, 220.0, 0.0, "FRAMES THAT CAN NOT BE SENT");
 
 	glColor3f(0.0, 1.0, 1.0);
@@ -2618,59 +2652,59 @@ void draw1(void) // DRAWING OF SEND WINDOW WITH ITS LABELS
 	glColor3f(0.0, 1.0, 1.0);
 	drawstring(195, 300.0, 0.0, "( Sn: NEXT FRAME TO SEND )");
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(55, 260.0, 0.0, "11");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(69, 260.0, 0.0, "12");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(84, 260.0, 0.0, "13");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(99, 260.0, 0.0, "14");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(114, 260.0, 0.0, "15");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(130, 260.0, 0.0, "0");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(147, 260.0, 0.0, "1");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(163, 260.0, 0.0, "2");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(177, 260.0, 0.0, "3");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(191, 260.0, 0.0, "4");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(206, 260.0, 0.0, "5");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(221, 260.0, 0.0, "6");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(236, 260.0, 0.0, "7");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(251, 260.0, 0.0, "8");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(266, 260.0, 0.0, "9");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(280, 260.0, 0.0, "10");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(295, 260.0, 0.0, "11");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(310, 260.0, 0.0, "12");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(324, 260.0, 0.0, "13");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(339, 260.0, 0.0, "14");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(354, 260.0, 0.0, "15");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(370, 260.0, 0.0, "0");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(385, 260.0, 0.0, "1");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(400, 260.0, 0.0, "2");
 
 	glEnd();
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glBegin(GL_LINE_LOOP); // Send window in WHITE color
 	glVertex2f(125, 240);
 	glVertex2f(245, 240);
@@ -2691,11 +2725,11 @@ void draw1(void) // DRAWING OF SEND WINDOW WITH ITS LABELS
 	//delay();
 }
 
-void draw2(void) // // DRAWING OF RECEIVE WINDOW WITH ITS LABELS
-{
+void draw2(void) // DRAWING OF RECEIVE WINDOW WITH ITS LABELS
+{	
 	// RECIVER WINDOW
 	glClear(GL_COLOR_BUFFER_BIT);
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glFlush();
 
 	glColor3f(0.0, 0.0, 1.0);
@@ -2703,79 +2737,79 @@ void draw2(void) // // DRAWING OF RECEIVE WINDOW WITH ITS LABELS
 	glEnd();
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	setFont(GLUT_BITMAP_HELVETICA_18);
 	drawstring(210.0, 405.0, 1.0, "R E C I E V E    W I N D O W");
 
 	setFont(GLUT_BITMAP_HELVETICA_12);
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(60, 220.0, 0.0, "FRAMES  ALREADY RECIEVED");
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(172, 220.0, 0.0, "FRAMES THAT CAN BE RECIEVED");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(172, 210.0, 0.0, "AND STORED FOR LATER DELIVERY");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(172, 200.0, 0.0, "( GREEN BOXES ALREADY RECIEVED )");
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(300, 220.0, 0.0, "FRAMES THAT CAN NOT BE RECIEVED");
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(175, 278.0, 0.0, "Rn");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(120, 300.0, 0.0, "( Rn: NEXT FRAME EXPECTED )");
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(55, 260.0, 0.0, "11");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(69, 260.0, 0.0, "12");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(84, 260.0, 0.0, "13");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(99, 260.0, 0.0, "14");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(114, 260.0, 0.0, "15");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(130, 260.0, 0.0, "0");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(147, 260.0, 0.0, "1");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(163, 260.0, 0.0, "2");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(177, 260.0, 0.0, "3");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(191, 260.0, 0.0, "4");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(206, 260.0, 0.0, "5");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(221, 260.0, 0.0, "6");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(236, 260.0, 0.0, "7");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(251, 260.0, 0.0, "8");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(266, 260.0, 0.0, "9");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(280, 260.0, 0.0, "10");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(295, 260.0, 0.0, "11");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(310, 260.0, 0.0, "12");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(324, 260.0, 0.0, "13");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(339, 260.0, 0.0, "14");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(354, 260.0, 0.0, "15");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(370, 260.0, 0.0, "0");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(385, 260.0, 0.0, "1");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(400, 260.0, 0.0, "2");
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glBegin(GL_LINE_LOOP); // Send window in WHITE color
 	glVertex2f(170, 240);
 	glVertex2f(290, 240);
@@ -2825,7 +2859,6 @@ void draw2(void) // // DRAWING OF RECEIVE WINDOW WITH ITS LABELS
 
 void draw3(void) // DRAWING OF SAFE SENDING
 {
-
 	//Sender site initial window
 	glClear(GL_COLOR_BUFFER_BIT);
 	computer();
@@ -2835,42 +2868,42 @@ void draw3(void) // DRAWING OF SAFE SENDING
 	drawstring(200.0, 465.0, 1.0, "S A F E    S E N D I N G");
 
 	setFont(GLUT_BITMAP_HELVETICA_12);
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(55, 268.0, 0.0, "0");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(69, 268.0, 0.0, " 1");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(84, 268.0, 0.0, "2");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(99, 268.0, 0.0, "3");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(114, 268.0, 0.0, "4");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(130, 268.0, 0.0, "5");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(147, 268.0, 0.0, "6");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(163, 268.0, 0.0, "7");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(177, 268.0, 0.0, "0");
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(305, 268.0, 0.0, "0");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(320, 268.0, 0.0, "1");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(334, 268.0, 0.0, " 2");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(349, 268.0, 0.0, "3");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(364, 268.0, 0.0, "4");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(379, 268.0, 0.0, "5");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(394, 268.0, 0.0, "6");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(409, 268.0, 0.0, "7");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(424, 268.0, 0.0, "0");
 
 	//SENDER SIDE
@@ -2879,7 +2912,7 @@ void draw3(void) // DRAWING OF SAFE SENDING
 	slide(10, 2, 50, 260);
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glBegin(GL_LINE_LOOP); // Send window in WHITE color
 	glVertex2f(50, 255);
 	glVertex2f(110, 255);
@@ -2903,7 +2936,7 @@ void draw3(void) // DRAWING OF SAFE SENDING
 	glEnd();
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glBegin(GL_LINE_LOOP); // receiver window in WHITE color
 	glVertex2f(300, 255);
 	glVertex2f(360, 255);
@@ -2944,7 +2977,7 @@ void draw3(void) // DRAWING OF SAFE SENDING
 	glEnd();
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glBegin(GL_LINE_LOOP); // moving the reciever window in WHITE color
 	glVertex2f(315, 255);
 	glVertex2f(375, 255);
@@ -2979,12 +3012,12 @@ void draw3(void) // DRAWING OF SAFE SENDING
 
 	move2();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(69, 268.0, 0.0, " 1");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(55, 268.0, 0.0, "0");
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(320, 268.0, 0.0, "1");
 
 	glColor3f(0.0, 0.0, 1.0); // sliding the window and becoming blue
@@ -3009,7 +3042,7 @@ void draw3(void) // DRAWING OF SAFE SENDING
 	glEnd();
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glBegin(GL_LINE_LOOP); // moving the reciever window in WHITE color
 	glVertex2f(65, 255);
 	glVertex2f(65, 290);
@@ -3048,7 +3081,7 @@ void draw3(void) // DRAWING OF SAFE SENDING
 	glEnd();
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glBegin(GL_LINE_LOOP); // moving the reciever window in WHITE color
 	glVertex2f(330, 255);
 	glVertex2f(330, 290);
@@ -3067,7 +3100,7 @@ void draw3(void) // DRAWING OF SAFE SENDING
 
 	setFont(GLUT_BITMAP_HELVETICA_12);
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(334, 268.0, 0.0, " 2");
 
 	glColor3f(0.0, 0.0, 0.0);
@@ -3089,7 +3122,7 @@ void draw3(void) // DRAWING OF SAFE SENDING
 	glEnd();
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glBegin(GL_LINE_LOOP); // moving the reciever window in WHITE color
 	glVertex2f(80, 255);
 	glVertex2f(80, 290);
@@ -3102,7 +3135,7 @@ void draw3(void) // DRAWING OF SAFE SENDING
 }
 
 void draw4(void) // DRAWING OF PACKET CRASHNG
-{
+{	
 	//second screen for lost packet
 	//delay();
 
@@ -3115,42 +3148,42 @@ void draw4(void) // DRAWING OF PACKET CRASHNG
 	drawstring(200.0, 465.0, 1.0, "P A C K E T   C R A S H I N G");
 
 	setFont(GLUT_BITMAP_HELVETICA_12);
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(56, 268.0, 0.0, "0");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(70, 268.0, 0.0, "1");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(85, 268.0, 0.0, "2");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(100, 268.0, 0.0, "3");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(114, 268.0, 0.0, " 4");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(130, 268.0, 0.0, "5");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(147, 268.0, 0.0, "6");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(163, 268.0, 0.0, "7");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(177, 268.0, 0.0, "0");
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(305, 268.0, 0.0, "0");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(320, 268.0, 0.0, "1");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(334, 268.0, 0.0, " 2");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(349, 268.0, 0.0, "3");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(365, 268.0, 0.0, "4");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(379, 268.0, 0.0, " 5");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(394, 268.0, 0.0, "6");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(409, 268.0, 0.0, "7");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(424, 268.0, 0.0, "0");
 
 	glColor3f(0.0, 0.0, 1.0);
@@ -3161,7 +3194,7 @@ void draw4(void) // DRAWING OF PACKET CRASHNG
 	glEnd();
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glBegin(GL_LINE_LOOP); // send window in WHITE color
 	glVertex2f(50, 255);
 	glVertex2f(50, 290);
@@ -3181,7 +3214,7 @@ void draw4(void) // DRAWING OF PACKET CRASHNG
 	glEnd();
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glBegin(GL_LINE_LOOP); // moving the reciever window in WHITE color
 	glVertex2f(300, 255);
 	glVertex2f(360, 255);
@@ -3218,7 +3251,7 @@ void draw4(void) // DRAWING OF PACKET CRASHNG
 	glEnd();
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glBegin(GL_LINE_LOOP); // moving the reciever window in WHITE color
 	glVertex2f(315, 255);
 	glVertex2f(375, 255);
@@ -3270,7 +3303,7 @@ void draw4(void) // DRAWING OF PACKET CRASHNG
 	glEnd();
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glBegin(GL_LINE_LOOP); // moving the reciever window in WHITE color
 	glVertex2f(65, 255);
 	glVertex2f(65, 290);
@@ -3314,7 +3347,7 @@ void draw4(void) // DRAWING OF PACKET CRASHNG
 	glEnd();
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glBegin(GL_LINE_LOOP); // moving the reciever window in WHITE color
 	glVertex2f(330, 255);
 	glVertex2f(330, 290);
@@ -3324,15 +3357,15 @@ void draw4(void) // DRAWING OF PACKET CRASHNG
 	glFlush();
 
 	setFont(GLUT_BITMAP_HELVETICA_12);
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(56, 268.0, 0.0, "0");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(320, 268.0, 0.0, "1");
 
 	move8();
 
 	setFont(GLUT_BITMAP_HELVETICA_12);
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(70, 268.0, 0.0, "1");
 
 	glColor3f(0.0, 0.0, 0.0);
@@ -3354,7 +3387,7 @@ void draw4(void) // DRAWING OF PACKET CRASHNG
 	glEnd();
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glBegin(GL_LINE_LOOP); // moving the reciever window in WHITE color
 	glVertex2f(80, 255);
 	glVertex2f(80, 290);
@@ -3403,7 +3436,7 @@ void draw4(void) // DRAWING OF PACKET CRASHNG
 	slide(2, 2, 65, 260);
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glBegin(GL_LINES);
 	glVertex2f(80, 260);
 	glVertex2f(80, 285);
@@ -3415,7 +3448,7 @@ void draw4(void) // DRAWING OF PACKET CRASHNG
 
 	move5();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(334, 268.0, 0.0, " 2");
 
 	glColor3f(0.0, 1.0, 0.0);
@@ -3475,7 +3508,7 @@ void draw4(void) // DRAWING OF PACKET CRASHNG
 	drawstring(280.0, 163.0, 1.0, "FRAME 2 lost");
 
 	move4();
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(334, 268.0, 0.0, " 2");
 
 	glColor3f(0.0, 1.0, 0.0);
@@ -3501,7 +3534,7 @@ void draw4(void) // DRAWING OF PACKET CRASHNG
 	slide(5, 2, 375, 260);
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glBegin(GL_LINE_LOOP); // moving the reciever window in WHITE color
 	glVertex2f(375, 255);
 	glVertex2f(375, 290);
@@ -3512,13 +3545,13 @@ void draw4(void) // DRAWING OF PACKET CRASHNG
 
 	move11();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(85, 268.0, 0.0, "2");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(100, 268.0, 0.0, "3");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(114, 268.0, 0.0, " 4");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(379, 268.0, 0.0, " 5");
 
 	glColor3f(0.0, 0.0, 0.0);
@@ -3538,7 +3571,7 @@ void draw4(void) // DRAWING OF PACKET CRASHNG
 	slide(5, 2, 125, 260);
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glBegin(GL_LINE_LOOP); // moving the reciever window in WHITE color
 	glVertex2f(125, 255);
 	glVertex2f(125, 290);
@@ -3550,7 +3583,6 @@ void draw4(void) // DRAWING OF PACKET CRASHNG
 
 void draw5(void) // to show time out
 {
-
 	//Sender site initial window
 	glClear(GL_COLOR_BUFFER_BIT);
 	computer();
@@ -3564,45 +3596,45 @@ void draw5(void) // to show time out
 	drawstring(200.0, 465.0, 1.0, "T I M E    O U T");
 
 	setFont(GLUT_BITMAP_HELVETICA_12);
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(55, 268.0, 0.0, "0");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(69, 268.0, 0.0, " 1");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(84, 268.0, 0.0, " 2");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(99, 268.0, 0.0, "3");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(114, 268.0, 0.0, "4");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(130, 268.0, 0.0, "5");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(147, 268.0, 0.0, "6");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(163, 268.0, 0.0, "7");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(177, 268.0, 0.0, "0");
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(305, 268.0, 0.0, "0");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(320, 268.0, 0.0, "1");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(334, 268.0, 0.0, " 2");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(349, 268.0, 0.0, " 3");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(364, 268.0, 0.0, "4");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(379, 268.0, 0.0, "5");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(394, 268.0, 0.0, "6");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(409, 268.0, 0.0, "7");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(424, 268.0, 0.0, "0");
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glBegin(GL_LINE_LOOP); // Send window in WHITE color
 	glVertex2f(50, 255);
 	glVertex2f(110, 255);
@@ -3626,7 +3658,7 @@ void draw5(void) // to show time out
 	glEnd();
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glBegin(GL_LINE_LOOP); // receiver window in WHITE color
 	glVertex2f(300, 255);
 	glVertex2f(360, 255);
@@ -3668,7 +3700,7 @@ void draw5(void) // to show time out
 	glEnd();
 	glFlush();
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	glBegin(GL_LINE_LOOP); // moving the reciever window in WHITE color
 	glVertex2f(315, 255);
 	glVertex2f(375, 255);
@@ -3705,9 +3737,9 @@ void draw5(void) // to show time out
 
 	setFont(GLUT_BITMAP_HELVETICA_12);
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(69, 268.0, 0.0, " 1");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(320, 268.0, 0.0, "1");
 
 	glColor3f(0.0, 0.0, 1.0); // sliding the window and becoming blue
@@ -3839,7 +3871,7 @@ void draw5(void) // to show time out
 
 	setFont(GLUT_BITMAP_HELVETICA_12);
 
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(334, 268.0, 0.0, "2");
 	setFont(GLUT_BITMAP_HELVETICA_18);
 	glColor3f(0.0f, 0.0f, 0.0f);
@@ -3899,13 +3931,13 @@ void draw5(void) // to show time out
 
 	move13();
 	setFont(GLUT_BITMAP_HELVETICA_12);
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(55, 268.0, 0.0, "0");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(69, 268.0, 0.0, " 1");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(84, 268.0, 0.0, " 2");
-	glColor3f(1.0, 1.0, 1.0);
+	glColor3fv(trgb);
 	drawstring(349, 268.0, 0.0, "3");
 
 	glColor3f(0.0, 0.0, 0.0);
@@ -3938,9 +3970,7 @@ void draw5(void) // to show time out
 }
 
 void draw6(void) // text for keyboard interaction
-
 {
-
 	glColor3f(0.0, 0.0, 0.0);
 	glBegin(GL_POLYGON);
 	glVertex2f(0, 0);
@@ -3958,14 +3988,31 @@ void draw6(void) // text for keyboard interaction
 	glFlush();
 }
 
-void display(void)
-{
-
+void clearScreen(){
+	glClearColor(bgr, bgg, bgb, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT);
-	title();
+}
+
+void display(void)
+{	
+	glClearColor(bgr, bgg, bgb, 0.0);
+	if(titleFlag){ 
+		title();
+		clearScreen();
+		titleFlag=false;
+	}
+	if (firstRun){
+		delay();delay();
+		draw1();
+		delay();delay();
+		draw2();
+		delay();
+		clearScreen();
+		firstRun = false;
+	}
 	delay();
 	draw();
-	text();
+	glFlush();
 }
 
 void mykeyboard(unsigned char key, int x, int y)
@@ -3974,7 +4021,6 @@ void mykeyboard(unsigned char key, int x, int y)
 	{
 
 		draw();
-		text();
 	}
 	else if (key == 'N' || key == 'n')
 	{
@@ -3989,41 +4035,88 @@ void myMouse(int btn, int state, int x, int y)
 	{
 		x = x / 2;
 		y = (1000 - y) / 2.1;
-		if ((x >= 180 && x <= 305) && (y >= 395 && y <= 425)) // 1 menu
-
+		glClearColor(0.0, 0.0, 0.0, 0.0);
+		if ((x >= 180 && x <= 305) && (y >= 375 && y <= 425)) // 1 menu
 		{
 			draw1();
 			draw6();
 		}
 
-		if ((x >= 180 && x <= 305) && (y >= 354 && y <= 375)) //   2 menu
+		if ((x >= 180 && x <= 305) && (y >= 320 && y <= 360)) //   2 menu
 		{
 			draw2();
 			draw6();
 		}
-		if ((x >= 180 && x <= 305) && (y >= 311 && y <= 333)) // 3 menu
+		if ((x >= 180 && x <= 305) && (y >= 280 && y <= 310)) // 3 menu
 		{
 			draw3();
 			delay();
 			draw6();
 		}
 
-		if ((x >= 180 && x <= 305) && (y >= 269 && y <= 293)) // 4 menu
+		if ((x >= 180 && x <= 305) && (y >= 220 && y <= 250)) // 4 menu
 		{
 			draw4();
 			delay();
 			draw6();
 		}
 
-		if ((x >= 180 && x <= 305) && (y >= 226 && y <= 249)) // 5 menu
+		if ((x >= 180 && x <= 305) && (y >= 170 && y <= 205)) // 5 menu
 		{
 			draw5();
 			delay();
 			draw6();
 		}
 
-		if ((x >= 180 && x <= 305) && (y >= 183 && y <= 206)) // 6 menu
+		if ((x >= 180 && x <= 242) && (y >= 110 && y <= 150)) // 5 menu
 		{
+			switch(colorNum){
+				case 0:
+					bgr = 0.8;bgg = 0.3;bgb = 0.2;
+					colorNum++;
+					glutPostRedisplay();
+					break;
+				case 1:
+					bgr = 0.1;bgg = 0.8;bgb = 0.1;
+					colorNum++;
+					glutPostRedisplay();
+					break;
+				case 2:
+					bgr = 0.1;bgg = 0.1;bgb = 0.8;
+					colorNum++;
+					glutPostRedisplay();
+					break;
+				default:
+					colorNum = 0;
+					bgr = 0.0;bgg = 0.0;bgb = 0.0;
+					glutPostRedisplay();
+			}
+		}
+		if ((x >= 244 && x <= 305) && (y >= 110 && y <= 150)){
+			if(pcColor){
+				pcrgb1[0] = 0.7; pcrgb1[1] = 0.2; pcrgb1[2] = 0.0;
+				pcrgb2[0] = 0.7; pcrgb2[1] = 0.2; pcrgb2[2] = 0.2;
+				pcrgb3[0] = 0.7; pcrgb3[1] = 0.0; pcrgb3[2] = 0.2;
+				pcrgb4[0] = 0.7; pcrgb4[1] = 0.3; pcrgb4[2] = 0.2;
+				pcColor = false;
+			}else{
+				pcrgb1[0] = 0.1; pcrgb1[1] = 0.8; pcrgb1[2] = 0.0;
+				pcrgb2[0] = 0.2; pcrgb2[1] = 0.8; pcrgb2[2] = 0.2;
+				pcrgb3[0] = 0.0; pcrgb3[1] = 0.7; pcrgb3[2] = 0.2;
+				pcrgb3[0] = 0.3; pcrgb3[1] = 0.7; pcrgb3[2] = 0.2;
+				pcColor = true;
+			}
+			glClearColor(0.8, 0.8, 0.8, 0.0);
+			glutPostRedisplay();
+			delay();
+			glClearColor(bgr, bgg, bgb, 0.0);
+			glutPostRedisplay();
+			glFlush();
+		}
+
+		if ((x >= 180 && x <= 305) && (y >= 70 && y <= 105)) // 6 menu
+		{
+			title();delay();
 			exit(0);
 		}
 	}
