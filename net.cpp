@@ -4128,7 +4128,7 @@ int main(int argc, char **argv)
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
 	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(1000, 1000);
-	glutCreateWindow("Selective Repeat ARQ");
+	glutCreateWindow("Network Packet - Selective Repeat ARQ");
 	glutDisplayFunc(display);
 	glutMouseFunc(myMouse);
 	glutKeyboardFunc(mykeyboard);
