@@ -3995,22 +3995,21 @@ void clearScreen(){
 
 void display(void)
 {	
-	glClearColor(bgr, bgg, bgb, 0.0);
+	clearScreen();
 	if(titleFlag){ 
 		title();
 		clearScreen();
 		titleFlag=false;
 	}
 	if (firstRun){
-		delay();delay();
+		delay();
 		draw1();
-		delay();delay();
+		delay();
 		draw2();
 		delay();
 		clearScreen();
 		firstRun = false;
 	}
-	delay();
 	draw();
 	glFlush();
 }
@@ -4036,39 +4035,39 @@ void myMouse(int btn, int state, int x, int y)
 		x = x / 2;
 		y = (1000 - y) / 2.1;
 		glClearColor(0.0, 0.0, 0.0, 0.0);
-		if ((x >= 180 && x <= 305) && (y >= 375 && y <= 425)) // 1 menu
+		if ((x >= 180 && x <= 305) && (y >= 395 && y <= 425)) // 1 menu
 		{
 			draw1();
 			draw6();
 		}
 
-		if ((x >= 180 && x <= 305) && (y >= 320 && y <= 360)) //   2 menu
+		if ((x >= 180 && x <= 305) && (y >= 360 && y <= 385)) //   2 menu
 		{
 			draw2();
 			draw6();
 		}
-		if ((x >= 180 && x <= 305) && (y >= 280 && y <= 310)) // 3 menu
+		if ((x >= 180 && x <= 305) && (y >= 325 && y <= 350)) // 3 menu
 		{
 			draw3();
 			delay();
 			draw6();
 		}
 
-		if ((x >= 180 && x <= 305) && (y >= 220 && y <= 250)) // 4 menu
+		if ((x >= 180 && x <= 305) && (y >= 290 && y <= 315)) // 4 menu
 		{
 			draw4();
 			delay();
 			draw6();
 		}
 
-		if ((x >= 180 && x <= 305) && (y >= 170 && y <= 205)) // 5 menu
+		if ((x >= 180 && x <= 305) && (y >= 255 && y <= 280)) // 5 menu
 		{
 			draw5();
 			delay();
 			draw6();
 		}
 
-		if ((x >= 180 && x <= 242) && (y >= 110 && y <= 150)) // 5 menu
+		if ((x >= 180 && x <= 242) && (y >= 220 && y <= 245)) // 5 menu
 		{
 			switch(colorNum){
 				case 0:
@@ -4092,7 +4091,7 @@ void myMouse(int btn, int state, int x, int y)
 					glutPostRedisplay();
 			}
 		}
-		if ((x >= 244 && x <= 305) && (y >= 110 && y <= 150)){
+		if ((x >= 244 && x <= 305) && (y >= 170 && y <= 195)){
 			if(pcColor){
 				pcrgb1[0] = 0.7; pcrgb1[1] = 0.2; pcrgb1[2] = 0.0;
 				pcrgb2[0] = 0.7; pcrgb2[1] = 0.2; pcrgb2[2] = 0.2;
@@ -4106,15 +4105,14 @@ void myMouse(int btn, int state, int x, int y)
 				pcrgb3[0] = 0.3; pcrgb3[1] = 0.7; pcrgb3[2] = 0.2;
 				pcColor = true;
 			}
-			glClearColor(0.8, 0.8, 0.8, 0.0);
+			clearScreen();
 			glutPostRedisplay();
-			delay();
-			glClearColor(bgr, bgg, bgb, 0.0);
+			clearScreen();
 			glutPostRedisplay();
 			glFlush();
 		}
 
-		if ((x >= 180 && x <= 305) && (y >= 70 && y <= 105)) // 6 menu
+		if ((x >= 180 && x <= 305) && (y >= 135 && y <= 160)) // 6 menu
 		{
 			title();delay();
 			exit(0);
